@@ -1,0 +1,198 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{latexsym}
+\usepackage{color}
+\usepackage{graphicx} 
+\usepackage{geometry}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\author{Adrianna Zelek}
+\title{BASH $\heartsuit$}
+\frenchspacing
+\begin{document}
+\newgeometry{tmargin=3cm, bmargin=3cm, lmargin=3cm, rmargin=3cm}
+\maketitle
+\newpage
+
+\tableofcontents
+
+\newpage
+\section{Wiadomości podstawowe} 
+
+\textcolor{blue}{BASH} - powłoka systemowa UNIX napisana dla projektu GNU. Program jest rozprowadzany na licencji GPL.
+
+
+Bash to jedna z najpopularniejszych powłok systemów uniksowych. Jest domyślną powłoką w większości dystrybucji systemu GNU/Linux oraz w systemie OS X od wersji 10.3, istnieją także wersje dla większości systemów uniksowych. Bash jest także domyślną powłoką w środowisku Cygwin dla systemów Win32.
+
+
+Bash pozwala na pracę w trybie konwersacyjnym i w trybie wsadowym. Język basha umożliwia definiowanie aliasów, funkcji, zawiera konstrukcje sterujące przepływem (if, while, for, ...). Powłoka systemowa zachowuje historię wykonywanych poleceń i zapisuje ją domyślnie w pliku .bash-history w katalogu domowym użytkownika.
+
+Nazwa jest akronimem od Bourne-Again Shell (angielska gra słów: fonetycznie brzmi tak samo, jak born again shell, czyli odrodzona powłoka). Wywodzi się od powłoki Bourne'a sh, która była jedną z pierwszych i najważniejszych powłok systemu UNIX oraz zawiera pomysły zawarte w powłokach Korna i csh. Bash był pisany głównie przez Briana Foksa i Cheta Rameya w 1987. ~\cite{pa}
+
+\subsection{Co to jest skrypt?} 
+\textbf{Skrypt} to niekompilowany tekstowy plik wykonywalny, zawierający jakieś
+polecenia systemowe oraz polecenia sterujące jego wykonaniem (instrukcje,
+pętle itp.). Skrypt wykonywany jest tylko i wyłącznie przez \textit{interpreter} (tutaj /bin/bash), który tłumaczy polecenia zawarte w skrypcie na język zrozumiały dla procesora.
+
+\subsection{Hello world} 
+Nasz pierwszy skrypt:\\
+\textit{\#!/bin/bash \\
+\# Tu jest komentarz.  \\
+echo "Hello world" \\ }
+\# - oznacza komentarz, wszystko co znajduje się za nim w tej samej linii, jest
+pomijane przez interpreter. \\
+Pierwsza linia skryptu zaczynająca się od znaków: \# ! ma szczególne
+znaczenie - wskazuje na rodzaj shella w jakim skrypt ma być wykonany, tutaj
+skrypt zawsze będzie wykonywany przez interpreter poleceń /bin/bash,
+niezależnie od tego jakiego rodzaju powłoki w danej chwili używamy. \ref{rys:h:obrazek1}\\
+\begin{figure}[h]
+\centering
+\includegraphics[width=12cm]h
+\caption{Wykonanie skryptu hello\_world.sh}
+\label{fig:obrazek h} \label{rys:h:obrazek1}
+\end{figure}
+\newpage
+\section{Zmienne} 
+\subsection{Zmienne programowe} 
+Zmienne programowe (użytkownika) (ang. program variables) - są to zmienne po prostu wykorzystywane wewnątrz skryptu, które definiuje użytkownik. Nie są dostępne dla innych programów, skryptów i powłok potomnych. Ich nazwy nie mogą się zaczynać od cyfry i pisane są zwyczajowo małymi literami. Czasami stosuje się podkreślenia.
+
+
+Zmienne tego typu inicjujemy w następujący sposób: \\
+\colorbox{yellow}{nazwa\_zmiennej="wartość"} \\
+a korzystamy z nich, poprzedzając ich wartość znakiem dolara (\$). \\
+\colorbox{yellow}{echo \$nazwa\_zmiennej}
+
+\subsection{Zmienne systemowe}
+Zmienne systemowe, często nazwane także zmiennymi środowiskowymi (ang.environment variables)- są zdefiniowane i przechowywane w środowisku nadrzędnym (powłoce z której uruchamiane są Twoje skrypty). Ich nazwy są zwyczajowo tworzone z dużych liter i mogą być testowane poleceniem set. Definiują środowisko użytkownika, dostępne dla wszystkich procesów potomnych. \cite{p} \\
+Przykłady:
+\begin{itemize}
+ \item \$HOME ścieżka do twojego katalogu domowego
+ \item \$USER twój login 
+ \item \$HOSTNAME nazwa twojego hosta
+ \item \$OSTYPE rodzaj systemu operacyjnego
+ \item \$UID Unique User ID - unikalny numer użytkownika
+ \item \$TERM Typ terminala z jakiego korzystamy \ldots
+\end{itemize}
+ 
+\subsection{Zmienne tablicowe}
+BASH pozwala na stosowanie zmiennych tablicowych jednowymiarowych.
+Tablica to zmienna która przechowuje listę jakichś wartości (rozdzielonych
+spacjami). W BASH'u nie ma maksymalnego rozmiaru tablic. Kolejne wartości zmiennej tablicowej indeksowane są przy pomocy liczb całkowitych, zaczynając od 0. \cite{s}\\
+\textit{Składnia} \\
+zmienna=(wartość1 wartość2 wartość3 wartośćn) \\
+Przykład:  \\
+\textit{ \#!/bin/bash \\
+tablica=(element1 element2 element3)\\
+echo \${tablica[0]}\\
+echo \${tablica[1]}\\
+echo \${tablica[2]}\\ }
+\subsection{Zmienne specjalne}
+\textbf{\$0} nazwa bieżącego skryptu lub powłoki \\
+Przykład:\\
+\textit{\#!/bin/bash\\
+echo "\$0"} \\
+\textcolor{blue}{Pokaże nazwę naszego skryptu}. \\ \\
+\textbf{\$1..\$9} Parametry przekazywane do skryptu (wyjątek, użytkownik może modyfikować ten rodzaj \$-ych specjalnych.\ref{rys:p:obrazek2}\\
+\textit{\#!/bin/bash 
+echo "\$1 \$2 \$3" \\
+}
+Jeśli wywołamy skrypt z parametrami to przypisane zostaną zmiennym: od \$1 do \$9. \\ \\
+\textbf{\$@} \\
+\textcolor{blue}{Pokaże wszystkie parametry przekzywane do skryptu (też wyjątek), równoważne \$1 \$2 \$3..., jeśli nie podane są żadne parametry \$@ interpretowana jest jako nic.} \\
+Przykład: \\
+\textit{
+\#!/bin/bash \\
+echo "Skrypt uruchomiono z parametrami: \$@"
+} \\ \\
+skrypt.sh {obrazek2}\\ 
+\textit{\#!/bin/bash \\
+echo "\$0" \\
+echo "\$1 \$2 \$3" \\
+echo "Skrypt uruchomiono z parametrami: \$@"} \\
+\begin{figure}[h]
+\centering
+\includegraphics[width=12cm]p
+\caption{Wykonanie skryptu skrypt.sh}\label{rys:p:obrazek2}
+\label{fig:obrazek p}
+\end{figure}
+
+\section{Operacje Arytmetyczne}
+\subsection{Dodawanie i odejmowanie}
+\begin{enumerate}
+  \item  Polecenie "let" \\
+  \textit{ let result=123+4\\
+   echo \$result }
+  \item Operator [ ] \\
+  \textit{ result=\$[ 5 + 5 ]\\
+    echo \$resultt }
+  \item  Polecenie "expr" \\
+  \textit{result=`expr 5 + 5 ` \\
+  echo \$result}
+\end{enumerate}
+
+\subsection{Potęgowanie i pierwiastkowanie}
+Pierwiastkowanie $\sqrt{x}$ \\
+\textit{echo "sqrt(100)" $|$ bc} \\
+Potęgowanie $a^{n}$ \\
+\textit{echo "sqrt(2 $\land$12)" $|$ bc} \\
+
+\section{Dostęp do plików}
+chmod (ang. change mode – zmiana atrybutu) – polecenie zmiany zezwoleń dostępu do plików w systemach uniksowych. \cite{c} \ref{tab:jeden} \\ \\
+%\textit{Tabela z interpretacją kodów ósemkowych} \\
+\begin{table}[h]
+\centering
+\begin{tabular}{|r|l|l|} \hline
+\textbf{Cyfra} & \textbf{Prawa} & \textbf{Litera}\\ \hline
+0 &	Brak praw &  \\ \hline
+1 &	Wykonywanie & x\\ \hline 
+2 &	Pisanie & w\\ \hline
+4 & Czytanie & r \\ \hline
+\end{tabular} 
+\caption{Tabela z interpretacją kodów ósemkowych}\label{tab:jeden}
+\end{table} \\
+
+Przykłady użycia: 
+\begin{itemize}
+\item \$ chmod a+w plik.txt — nadaje wszystkim uprawnienia do zmiany 'plik.txt',
+\item \$ chmod o-x plik.txt — usuwa możliwość wykonywania 'plik.txt' przez pozostałych użytkowników,
+\item \$ chmod go=rx plik.txt — grupa oraz pozostali użytkownicy będą mogli tylko czytać i wykonywać.
+\item \$ chmod -R 777 /home/user — wszyscy będą mogli zmieniać zawartość katalogu /home/user oraz jego podkatalogów, jak też czytać go i wykonywać zawarte w nim pliki
+\end{itemize}
+
+\section{Trudne wzory}
+
+Całka \ref{equ:calka} \\
+$\lim_{n \to \infty}
+\sum_{k=1}^n \frac{1}{k^2}
+= \frac{\pi^2}{6}
+$
+\\ \\
+$
+\sum_{i=1}^{n} \quad
+\int_{0}^{\frac{\pi}{2}}
+\label{equ:calka}
+$ \\ \\ 
+$y = \left\{ \begin{array}{ll}
+a & \textrm{gdy $d>c$}\\
+b+x & \textrm{gdy $d=c$}\\
+l & \textrm{gdy $ d < c $}
+\end{array} \right.
+$
+
+\newpage
+
+
+\begin{thebibliography}{99}
+\bibitem{pa}
+ \href{http://pl.wikipedia.org/wiki/Bash}{Wikipedia bash} 
+\bibitem{p}
+ \href{http://bash.0x1fff.com/zmienne-systemowe}{www.bash.0x1fff.com}
+ \bibitem{s} 
+ prezentacja - Środowisko programisty - BASH  Emilia Lubecka
+\bibitem{c} 
+ \href{http://pl.wikipedia.org/wiki/Chmod}{Wikipedia Chmod} 
+\end{thebibliography}
+
+\end{document}
